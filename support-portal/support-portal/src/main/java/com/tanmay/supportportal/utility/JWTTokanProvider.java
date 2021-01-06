@@ -1,8 +1,11 @@
 package com.tanmay.supportportal.utility;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.auth0.jwt.JWT;
 import com.tanmay.supportportal.constant.SecurityConstant;
@@ -27,7 +30,11 @@ public class JWTTokanProvider {
 
 	private String[] getClaimsFromUser(UserPrincipal userPrincipal) {
 		// TODO Auto-generated method stub
-		return null;
+		List<String> authorities = new ArrayList<String>();
+		for(GrantedAuthority grantedAuthority : userPrincipal.getAuthorities()) {
+			authorities.add(grantedAuthority.getAuthority());
+		}
+		return authorities.toArray(new String[0]);
 	}
 	
 }
