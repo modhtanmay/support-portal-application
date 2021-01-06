@@ -12,6 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.tanmay.supportportal.constant.SecurityConstant;
 import com.tanmay.supportportal.domain.UserPrincipal;
 
@@ -39,7 +42,20 @@ public class JWTTokanProvider {
 	
 	private String[] getClaimsFromToken(String token) {
 		// TODO Auto-generated method stub
-		return null;
+		JWTVerifier verifier = getJWTVerifier();
+		return verifier.verify(token).getClaim(SecurityConstant.AUTHORITIES).asArray(String.class);
+	}
+
+	private JWTVerifier getJWTVerifier() {
+		// TODO Auto-generated method stub
+		JWTVerifier verifier;
+		try {
+			Algorithm algorithm = HMAC512(secret);
+			verifier = JWT.require(algorithm).withIssuer(SecurityConstant.GET_ARRAYS_LLC).build();
+		} catch(JWTVerificationException exception) {
+			throw new JWTVerificationException(SecurityConstant.TOKEN_CANNOT_BE_VERIFIED);
+		}
+		return verifier;
 	}
 
 	private String[] getClaimsFromUser(UserPrincipal userPrincipal) {
