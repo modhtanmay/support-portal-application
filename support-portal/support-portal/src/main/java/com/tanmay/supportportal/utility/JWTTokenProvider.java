@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -28,7 +29,8 @@ import com.tanmay.supportportal.domain.UserPrincipal;
 import static java.util.Arrays.stream;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
-public class JWTTokanProvider {
+@Component
+public class JWTTokenProvider {
 
 	@Value("${jwt.secret}")
 	private String secret;	// will be in some secured server
