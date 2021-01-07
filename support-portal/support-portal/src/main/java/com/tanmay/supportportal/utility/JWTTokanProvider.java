@@ -7,9 +7,15 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -39,6 +45,15 @@ public class JWTTokanProvider {
 		String[] claims = getClaimsFromToken(token);
 		return stream(claims).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 	}
+	
+	public Authentication getAuthentication(String username,List<GrantedAuthority> authorities,HttpServletRequest request) {
+		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username, null,authorities);
+		
+		usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+		return usernamePasswordAuthenticationToken;
+	}
+	
+	
 	
 	private String[] getClaimsFromToken(String token) {
 		// TODO Auto-generated method stub
