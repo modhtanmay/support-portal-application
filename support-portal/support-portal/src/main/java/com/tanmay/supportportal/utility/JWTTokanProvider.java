@@ -59,6 +59,11 @@ public class JWTTokanProvider {
 		return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier,token);
 	}
 	
+	public String getSubject(String token) {
+		JWTVerifier verifier = getJWTVerifier();
+		return verifier.verify(token).getSubject();
+	}
+	
 	private boolean isTokenExpired(JWTVerifier verifier, String token) {
 		// TODO Auto-generated method stub
 		Date expiration = verifier.verify(token).getExpiresAt();
