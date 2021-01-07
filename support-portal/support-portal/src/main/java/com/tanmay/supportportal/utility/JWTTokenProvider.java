@@ -30,8 +30,8 @@ import static java.util.Arrays.stream;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 @Component
-public class JWTTokenProvider {
-
+public class JWTTokenProvider {  // used to generate token, verify user token and verify user information etc..
+	
 	@Value("${jwt.secret}")
 	private String secret;	// will be in some secured server
 	
