@@ -1,0 +1,13 @@
+package com.tanmay.supportportal.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.tanmay.supportportal.domain.User;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+	
+	User findUserByUserName(String username);
+	
+	User findUserByEmail(String email);
+
+}
