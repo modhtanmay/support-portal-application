@@ -1,5 +1,5 @@
 package com.tanmay.supportportal.service;
 
-public class UserService {
+public interface UserService {
 
 }
