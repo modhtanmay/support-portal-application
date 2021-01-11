@@ -28,7 +28,7 @@ public class JWTAccessDeniedHandler implements AccessDeniedHandler {
 				HttpStatus.UNAUTHORIZED.getReasonPhrase().toUpperCase(), SecurityConstant.ACCESS_DENIED_MESSAGE);
 
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		response.setStatus(HttpStatus.FORBIDDEN.value());
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
 		OutputStream outputStream = response.getOutputStream();
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.writeValue(outputStream, httpResponse);
