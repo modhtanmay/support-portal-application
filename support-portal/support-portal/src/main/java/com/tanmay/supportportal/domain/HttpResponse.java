@@ -18,7 +18,7 @@ public class HttpResponse {  // this is response that we sent to user everytime
 	private String reason;
 	private String message;
 	
-	private HttpResponse(Date timeStamp, int httpStatusCode, HttpStatus httpStatus, String reason, String message) {
+	public HttpResponse(int httpStatusCode, HttpStatus httpStatus, String reason, String message) {
 		super();
 		this.timeStamp = new Date();
 		this.httpStatusCode = httpStatusCode;
