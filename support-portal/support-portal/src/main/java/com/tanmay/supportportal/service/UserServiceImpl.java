@@ -1,9 +1,12 @@
 package com.tanmay.supportportal.service;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +14,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tanmay.supportportal.domain.User;
 import com.tanmay.supportportal.domain.UserPrincipal;
+import com.tanmay.supportportal.enumeration.Roles;
+import com.tanmay.supportportal.exception.domain.EmailExistException;
+import com.tanmay.supportportal.exception.domain.UserNotFoundException;
+import com.tanmay.supportportal.exception.domain.UsernameExistException;
 import com.tanmay.supportportal.repository.UserRepository;
 
 @Service
@@ -24,7 +33,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
-
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Override
@@ -43,5 +55,96 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			LOGGER.info("returning found user by username: " + username);
 			return principal;
 		}
+	}
+
+	@Override
+	public User register(String firstName, String lastName, String userName, String email) throws UserNotFoundException, UsernameExistException, EmailExistException {
+		// TODO Auto-generated method stub
+		validateNewUserNameandEmail(StringUtils.EMPTY,userName,email);
+		User user = new User();
+		user.setUserId(generateUserId());
+		String password = generatePassword();
+		String encodedPassword = encodePassword(password);
+		user.setFirstName(firstName);
+		user.setLastName(lastName);
+		user.setUserName(userName);
+		user.setEmail(email);
+		user.setJoinDate(new Date());
+		user.setPassword(encodedPassword);
+		user.setActive(true);
+		user.setNotLocked(true);
+		user.setRoles(Roles.ROLE_USER.name());
+		user.setAuthorities(Roles.ROLE_USER.getAuthorities());
+		user.setProfileImageUrl(getTemporaryProfileImageUrl());
+		userRepository.save(user);
+		LOGGER.info("New User password : "+password);
+		return null;
+	}
+
+	private String getTemporaryProfileImageUrl() {
+		// TODO Auto-generated method stub
+		return ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/image/profile/temp").toUriString(); // ServletUriComponentBuilder adds prefix on whatever platform it is i.e. http://localhost:8080/, or if google then www.google.com/ etc
+	}
+
+	private String encodePassword(String password) {
+		// TODO Auto-generated method stub
+		return bCryptPasswordEncoder.encode(password);
+	}
+
+	private String generatePassword() {
+		// TODO Auto-generated method stub
+		return RandomStringUtils.randomAlphanumeric(10);  // random String of 10 alphanumeric digits
+	}
+
+	private String generateUserId() {
+		// TODO Auto-generated method stub
+		return RandomStringUtils.randomNumeric(10);  // random String of 10 numeric digits
+	}
+
+	private User validateNewUserNameandEmail(String currentUserName,String newUserName, String newEmail) throws UserNotFoundException, UsernameExistException, EmailExistException {
+		// TODO Auto-generated method stub
+		if(StringUtils.isNotBlank(currentUserName)) {
+			User currentUser = findUserByUserName(currentUserName);
+			if(currentUser == null) {
+				throw new UserNotFoundException("No user found by username "+ currentUserName);
+			}
+			User userByUserName = findUserByUserName(newUserName);
+			if(userByUserName != null && !currentUser.getId().equals(userByUserName.getId())) {
+				throw new UsernameExistException("UserName already exists");
+			}
+			User userByEmail = findUserByEmail(newEmail);
+			if(userByEmail != null && !currentUser.getId().equals(userByEmail.getId())) {
+				throw new EmailExistException("UserName already exists");
+			}	
+			return currentUser;
+		} else {
+			User userByUserName = findUserByUserName(newUserName);
+			if(userByUserName != null) {
+				throw new UsernameExistException("UserName already exists");
+			}
+			User userByEmail = findUserByEmail(newEmail);
+			if(userByEmail != null) {
+				throw new EmailExistException("UserName already exists");
+			}
+			return null;
+		}
+	}
+
+	@Override
+	public List<User> getUsers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User findUserByUserName(String userName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public User findUserByEmail(String email) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
