@@ -3,6 +3,11 @@ jwt:
 
 server:
   port: 8082
+# we can also allow server to handle page not found and avoid spring to throw whitelavel error
+# below will throw Http 404 Not Found error  
+#  error:
+#    whitelabel:
+#      enabled: false
   
 spring:
   datasource:
@@ -16,3 +21,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+#  this below allows us to handle page not found and avoids spring to throw whitelabel error         
+#  mvc:
+#    throw-exception-if-no-handler-found: true
+#  resources:
+#    add-mappings: false

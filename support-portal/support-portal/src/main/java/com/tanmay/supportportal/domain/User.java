@@ -1,4 +1,4 @@
-package com.tanmay.supportportal.domain;
+	package com.tanmay.supportportal.domain;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,7 +32,7 @@ public class User implements Serializable{
 	private Date lastLoginDate;
 	private Date lastLoginDateDisplay;
 	private Date joinDate;
-	private String[] roles;  //ROLE_USER{ delete,update,create },ROLE_ADMIN
+	private String[] roles;  //ROLE_USER{ read,edit },ROLE_ADMIN {delete}
 	private String[] authorities;
 	private boolean isActive;
 	private boolean isNotLocked;
