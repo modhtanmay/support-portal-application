@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		user.setProfileImageUrl(getTemporaryProfileImageUrl());
 		userRepository.save(user);
 		LOGGER.info("New User password : "+password);
-		return null;
+		return user;
 	}
 
 	private String getTemporaryProfileImageUrl() {
@@ -103,28 +103,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	private User validateNewUserNameandEmail(String currentUserName,String newUserName, String newEmail) throws UserNotFoundException, UsernameExistException, EmailExistException {
 		// TODO Auto-generated method stub
+		User userByNewUserName = findUserByUserName(newUserName);
+		User userByNewEmail = findUserByEmail(newEmail);
+
 		if(StringUtils.isNotBlank(currentUserName)) {
 			User currentUser = findUserByUserName(currentUserName);
 			if(currentUser == null) {
 				throw new UserNotFoundException("No user found by username "+ currentUserName);
 			}
-			User userByUserName = findUserByUserName(newUserName);
-			if(userByUserName != null && !currentUser.getId().equals(userByUserName.getId())) {
+			if(userByNewUserName != null && !currentUser.getId().equals(userByNewUserName.getId())) {
 				throw new UsernameExistException("UserName already exists");
 			}
-			User userByEmail = findUserByEmail(newEmail);
-			if(userByEmail != null && !currentUser.getId().equals(userByEmail.getId())) {
-				throw new EmailExistException("UserName already exists");
+			if(userByNewEmail != null && !currentUser.getId().equals(userByNewEmail.getId())) {
+				throw new EmailExistException("Email already exists");
 			}	
 			return currentUser;
 		} else {
-			User userByUserName = findUserByUserName(newUserName);
-			if(userByUserName != null) {
+			if(userByNewUserName != null) {
 				throw new UsernameExistException("UserName already exists");
 			}
-			User userByEmail = findUserByEmail(newEmail);
-			if(userByEmail != null) {
-				throw new EmailExistException("UserName already exists");
+			if(userByNewEmail != null) {
+				throw new EmailExistException("Email already exists");
 			}
 			return null;
 		}
@@ -133,18 +132,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Override
 	public List<User> getUsers() {
 		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findAll();
 	}
 
 	@Override
 	public User findUserByUserName(String userName) {
 		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findUserByUserName(userName);
 	}
 
 	@Override
 	public User findUserByEmail(String email) {
 		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findUserByEmail(email);
 	}
 }
