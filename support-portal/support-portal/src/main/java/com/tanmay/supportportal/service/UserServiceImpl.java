@@ -48,8 +48,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			LOGGER.error("User not found by username: " + username);
 			throw new UsernameNotFoundException("User not found by username: " + username);
 		} else {
-			user.setLastLoginDateDisplay(user.getLastLoginDate());
 			user.setLastLoginDate(new Date());
+			user.setLastLoginDateDisplay(user.getLastLoginDate());
 			userRepository.save(user);
 			UserPrincipal principal = new UserPrincipal(user);
 			LOGGER.info("returning found user by username: " + username);

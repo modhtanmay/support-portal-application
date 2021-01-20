@@ -26,3 +26,9 @@ spring:
 #    throw-exception-if-no-handler-found: true
 #  resources:
 #    add-mappings: false
+
+
+# USER PASSWORDS
+# 1) John Doe | username: john | passwd: T6zvydqYam
+# 2) Chris paul | username: chris | passwd: cqJWMOVqIb
+# 3) 
