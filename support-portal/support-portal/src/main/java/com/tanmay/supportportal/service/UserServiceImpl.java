@@ -2,6 +2,7 @@ package com.tanmay.supportportal.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.transaction.Transactional;
 
@@ -37,6 +38,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	@Autowired
+	private LoginAttemptService loginAttemptService;
+	
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Override
@@ -48,6 +52,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			LOGGER.error("User not found by username: " + username);
 			throw new UsernameNotFoundException("User not found by username: " + username);
 		} else {
+			validateLoginAttempt(user);						// this will check whether account is active,loggedin etc functionalities...
 			user.setLastLoginDate(new Date());
 			user.setLastLoginDateDisplay(user.getLastLoginDate());
 			userRepository.save(user);
@@ -55,6 +60,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			LOGGER.info("returning found user by username: " + username);
 			return principal;
 		}
+	}
+
+	private void validateLoginAttempt(User user) {
+		// TODO Auto-generated method stub
+		if(user.isNotLocked()) {
+			if(loginAttemptService.exceededMaxAttempt(user.getUserName())) {	// if exceeded attempts to login
+				user.setNotLocked(false);										// set account to Locked
+			} else {
+				user.setNotLocked(true);										// else dont lock account
+			}
+		} else {
+			loginAttemptService.evictUserFromLoginAttemptCache(user.getUserName());		// if account locked remove user from cache
+		}
+		
 	}
 
 	@Override
