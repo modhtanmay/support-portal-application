@@ -36,14 +36,25 @@ public class LoginAttemptService {
 		loginAttemptCache.invalidate(username); // finds the key and removes it
 	}
 
-	public void addUserToLoginAttemptCache(String username) throws ExecutionException { // adds user to the cache
+	public void addUserToLoginAttemptCache(String username) { // adds user to the cache
 		int attempts = 0; // increment the value and put them in cache
-		attempts = ATTEMPT_INCREMENT + loginAttemptCache.get(username); // finds values of get(username) and adds
+		try {
+			attempts = ATTEMPT_INCREMENT + loginAttemptCache.get(username);			// finds values of get(username) and adds
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		loginAttemptCache.put(username, attempts);
 	}
 
-	public boolean exceededMaxAttempt(String username) throws ExecutionException { // checks max attempts exceeded or
+	public boolean exceededMaxAttempt(String username) { // checks max attempts exceeded or
 																					// not
-		return loginAttemptCache.get(username) >= MAXIMUM_NUMBER_OF_ATTEMPT;
+		try {
+			return loginAttemptCache.get(username) >= MAXIMUM_NUMBER_OF_ATTEMPT;
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
