@@ -3,8 +3,8 @@ package com.tanmay.supportportal.constant;
 public class EmailConstant {
 
 	public static final String SIMPLE_MAIL_TRANSFER_PROTOCOL = "smtps";
-	public static final String USERNAME = "infojunior@gmail.com";
-	public static final String PASSWORD = "tansoft@588";
+	public static final String USERNAME = "sendthemail.360@gmail.com";
+	public static final String PASSWORD = "Sendthemail@588";
 	public static final String FROM_EMAIL = "support@tansoft.com";
 	public static final String CC_EMAIL = "";
 	public static final String EMAIL_SUBJECT = "TanSoft Solutions, LLC - New Password";
