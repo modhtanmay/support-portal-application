@@ -11,9 +11,9 @@ server:
   
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/supportportal
-    password: modhtanu
-    username: root
+    url: jdbc:mysql://localhost:3306/<your-database-name>
+    password: <your-database-password>
+    username: <your-database-username>
   jpa:
     show-sql: true
     hibernate:
@@ -28,7 +28,7 @@ spring:
 #    add-mappings: false
 
 
-# USER PASSWORDS
+# USER and PASSWORDS for testing
 # 1) John Doe | username: john | passwd: T6zvydqYam
 # 2) Chris Paul | username: chris | passwd: cqJWMOVqIb
 # 3) Emma Watson | username: emma | passwd: RCuv9hMK3u
